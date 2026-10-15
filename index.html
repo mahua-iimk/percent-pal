@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- PercentPal Last Updated: October 15, 2026, 10:46 AM | Pip the Panda Edition -->
 <html lang="en">
 <head>
+    <!-- PercentPal Last Updated: October 15, 2026, 10:51 AM | Pip the Panda Edition -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PercentPal - The Interactive Percentage Adventure with Pip!</title>
@@ -73,7 +73,7 @@
             </button>
         </div>
 
-        <!-- Badge Progress Display (Visible Across Both Tabs) -->
+        <!-- Badge Progress Display -->
         <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-md border border-indigo-100 mb-8">
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center">Your Badge Progress Showcase</h3>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -191,22 +191,6 @@
         </section>
 
     </main>
-
-    <!-- Certificate Render Template (Kept off-screen safely) -->
-    <div style="position: absolute; left: -9999px; top: -9999px;">
-        <div id="certificate-template" style="width: 800px; padding: 40px; background: #ffffff; border: 12px solid #4F46E5; text-align: center; font-family: 'Fredoka', sans-serif; box-sizing: border-box; border-radius: 20px;">
-            <div style="font-size: 50px; margin-bottom: 5px;">🐼 🏆 🍕</div>
-            <div style="color: #4F46E5; font-size: 36px; font-weight: bold; margin-bottom: 10px;">PercentPal Certificate of Mastery</div>
-            <p style="font-size: 18px; color: #64748B; margin-top: 5px;">This is proudly presented to</p>
-            <div id="cert-name-display" style="font-size: 34px; color: #0D9488; font-weight: bold; border-bottom: 3px dashed #CBD5E1; display: inline-block; padding: 0 30px; margin: 15px 0;">Super Explorer</div>
-            <p style="font-size: 18px; color: #334155; margin-top: 15px; line-height: 1.5;">for successfully completing all percentage challenges and mastering problem-solving approaches with <strong>Pip the Panda</strong> on</p>
-            <div style="font-size: 26px; color: #4F46E5; font-weight: bold; margin: 12px 0;">PercentPal</div>
-            <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #E2E8F0; padding-top: 20px;">
-                <div style="font-size: 14px; color: #64748B;">Date: <span id="cert-date"></span></div>
-                <div style="font-size: 14px; color: #475569; font-weight: bold;">Ideated by Mahua Banerjee, built with Gemini 🚀</div>
-            </div>
-        </div>
-    </div>
 
     <!-- Footer with Attribution -->
     <footer class="w-full py-6 mt-12 bg-white/60 border-t border-indigo-100 text-center text-slate-500 text-sm font-medium">
@@ -383,7 +367,6 @@
             document.getElementById('badges-count').innerText = count;
             document.getElementById('badges-earned').innerText = count;
 
-            // Highlight Badge Showcase cards
             unlockedBadges.forEach(id => {
                 const card = document.getElementById(`badge-card-${id}`);
                 if (card) {
@@ -403,11 +386,36 @@
         function generateCertificate() {
             const nameInput = document.getElementById('student-name-input').value.trim();
             const studentName = nameInput ? nameInput : "Super Explorer";
-            
-            document.getElementById('cert-name-display').innerText = studentName;
-            document.getElementById('cert-date').innerText = new Date().toLocaleDateString();
+            const currentDate = new Date().toLocaleDateString();
 
-            const element = document.getElementById('certificate-template');
+            // Create certificate element dynamically in memory to guarantee html2canvas captures it correctly
+            const certElement = document.createElement('div');
+            certElement.style.width = '800px';
+            certElement.style.padding = '40px';
+            certElement.style.background = '#ffffff';
+            certElement.style.border = '12px solid #4F46E5';
+            certElement.style.textAlign = 'center';
+            certElement.style.fontFamily = "'Fredoka', sans-serif";
+            certElement.style.boxSizing = 'border-box';
+            certElement.style.borderRadius = '20px';
+            certElement.style.position = 'fixed';
+            certElement.style.top = '0';
+            certElement.style.left = '-9999px';
+
+            certElement.innerHTML = `
+                <div style="font-size: 50px; margin-bottom: 5px;">🐼 🏆 🍕</div>
+                <div style="color: #4F46E5; font-size: 36px; font-weight: bold; margin-bottom: 10px;">PercentPal Certificate of Mastery</div>
+                <p style="font-size: 18px; color: #64748B; margin-top: 5px;">This is proudly presented to</p>
+                <div style="font-size: 34px; color: #0D9488; font-weight: bold; border-bottom: 3px dashed #CBD5E1; display: inline-block; padding: 0 30px; margin: 15px 0;">${studentName}</div>
+                <p style="font-size: 18px; color: #334155; margin-top: 15px; line-height: 1.5;">for successfully completing all percentage challenges and mastering problem-solving approaches with <strong>Pip the Panda</strong> on</p>
+                <div style="font-size: 26px; color: #4F46E5; font-weight: bold; margin: 12px 0;">PercentPal</div>
+                <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #E2E8F0; padding-top: 20px;">
+                    <div style="font-size: 14px; color: #64748B;">Date: ${currentDate}</div>
+                    <div style="font-size: 14px; color: #475569; font-weight: bold;">Ideated by Mahua Banerjee, built with Gemini 🚀</div>
+                </div>
+            `;
+
+            document.body.appendChild(certElement);
 
             const opt = {
                 margin:       0.2,
@@ -417,7 +425,9 @@
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
             };
 
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set(opt).from(certElement).save().then(() => {
+                document.body.removeChild(certElement);
+            });
         }
 
         renderQuests();
