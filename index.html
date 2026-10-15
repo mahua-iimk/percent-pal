@@ -7,711 +7,376 @@
     <!-- Tailwind CSS for modern responsive design -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Fredoka & Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- html2pdf for Certificate Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f9ff;
-            background-image: radial-gradient(#bae6fd 1px, transparent 1px);
-            background-size: 24px 24px;
-        }
-        h1, h2, h3, .font-fun {
-            font-family: 'Fredoka', cursive, sans-serif;
-        }
-        .bounce-gentle {
-            animation: bounce 3s infinite ease-in-out;
-        }
-        @keyframes bounce {
+        body { font-family: 'Inter', sans-serif; }
+        .font-fredoka { font-family: 'Fredoka', sans-serif; }
+        .tab-btn.active { background-color: #4F46E5; color: white; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); }
+        .badge-locked { filter: grayscale(100%); opacity: 0.4; transform: scale(0.95); transition: all 0.3s ease; }
+        .badge-unlocked { filter: grayscale(0%); opacity: 1; transform: scale(1); animation: bounceShort 0.5s ease; }
+        @keyframes bounceShort {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        .shake {
-            animation: shake 0.5s ease-in-out;
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-6px); }
-            40%, 80% { transform: translateX(6px); }
+            50% { transform: translateY(-6px); }
         }
     </style>
 </head>
-<body class="text-slate-700 min-h-screen flex flex-col justify-between selection:bg-amber-300 selection:text-amber-900">
+<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen text-slate-800 flex flex-col justify-between">
 
-    <!-- Top Navigation Header -->
-    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-sky-100 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
-                <div class="w-10 h-10 bg-amber-400 rounded-2xl flex items-center justify-center shadow-md transform rotate-3">
-                    <span class="text-2xl font-fun font-bold text-white">%</span>
+    <!-- Top Header & Visitor Stats -->
+    <header class="w-full bg-white/80 backdrop-blur-md shadow-sm border-b border-indigo-100 py-4 px-6 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2.5 rounded-2xl shadow-md">
+                    <i data-lucide="percent" class="w-7 h-7"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">PercentPal</h1>
-                    <p class="text-xs text-slate-400 font-medium">Interactive Percentage Quest</p>
+                    <h1 class="text-2xl font-fredoka font-bold text-indigo-900 tracking-wide">Percent<span class="text-teal-500">Pal</span></h1>
+                    <p class="text-xs text-slate-500 font-medium">Interactive Percentage Adventure for Kids</p>
                 </div>
             </div>
-            
-            <nav class="hidden md:flex items-center space-x-1 font-semibold text-sm">
-                <button onclick="switchTab('home')" id="nav-home" class="px-4 py-2 rounded-xl transition bg-sky-50 text-sky-600 font-bold">🏠 Home</button>
-                <button onclick="switchTab('learn')" id="nav-learn" class="px-4 py-2 rounded-xl transition hover:bg-sky-50 text-slate-600 font-semibold">📚 Learning Zone</button>
-                <button onclick="switchTab('challenges')" id="nav-challenges" class="px-4 py-2 rounded-xl transition hover:bg-sky-50 text-slate-600 font-semibold">🚀 Story Quests</button>
-                <button onclick="switchTab('badges')" id="nav-badges" class="px-4 py-2 rounded-xl transition hover:bg-sky-50 text-slate-600 font-semibold flex items-center gap-1">🏆 Badges <span id="badge-count" class="bg-amber-400 text-amber-950 text-xs px-2 py-0.5 rounded-full font-bold">1</span></button>
-            </nav>
 
-            <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-2xl shadow-sm">
-                <span class="text-xl">⭐</span>
-                <span id="star-counter" class="font-fun font-bold text-amber-600 text-lg">100</span>
-                <span class="text-xs text-amber-700 font-medium uppercase tracking-wider">Stars</span>
+            <!-- Live Stats Banner -->
+            <div class="flex items-center gap-3 text-sm font-medium">
+                <div class="bg-indigo-50 px-4 py-2 rounded-full border border-indigo-200 flex items-center gap-2 text-indigo-700 shadow-sm">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>Total Explorers: <strong id="total-visitors" class="font-bold text-indigo-900">128</strong></span>
+                </div>
+                <div class="bg-emerald-50 px-4 py-2 rounded-full border border-emerald-200 flex items-center gap-2 text-emerald-700 shadow-sm">
+                    <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span>Active Now: <strong class="font-bold text-emerald-900">1</strong></span>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Mobile Nav Bar (Bottom) -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around p-2 z-50 shadow-lg">
-        <button onclick="switchTab('home')" class="flex flex-col items-center p-2 text-xs text-sky-600 font-semibold" id="mob-nav-home">🏠<span class="mt-1">Home</span></button>
-        <button onclick="switchTab('learn')" class="flex flex-col items-center p-2 text-xs text-slate-500 font-semibold" id="mob-nav-learn">📚<span class="mt-1">Learn</span></button>
-        <button onclick="switchTab('challenges')" class="flex flex-col items-center p-2 text-xs text-slate-500 font-semibold" id="mob-nav-challenges">🚀<span class="mt-1">Quests</span></button>
-        <button onclick="switchTab('badges')" class="flex flex-col items-center p-2 text-xs text-slate-500 font-semibold" id="mob-nav-badges">🏆<span class="mt-1">Badges</span></button>
-    </div>
-
-    <!-- Main Content Area -->
-    <main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 mb-12">
-
-        <!-- ================= TAB: HOME ================= -->
-        <div id="tab-home" class="tab-content space-y-8">
-            <!-- Hero Banner -->
-            <div class="bg-gradient-to-br from-sky-400 via-indigo-500 to-purple-600 rounded-3xl p-6 md:p-10 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
-                <div class="max-w-xl z-10 space-y-4 text-center md:text-left">
-                    <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">✨ Interactive Math Playground</span>
-                    <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight font-fun leading-tight">Master Percentages with Pip the Panda!</h2>
-                    <p class="text-sky-100 text-base md:text-lg">Percentages are everywhere! From pizza slices to store discounts. Learn <span class="text-amber-300 font-bold">how to think</span> through problems step-by-step and earn awesome trophies!</p>
-                    <div class="pt-2 flex flex-wrap gap-3 justify-center md:justify-start">
-                        <button onclick="switchTab('learn')" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-fun font-bold px-6 py-3 rounded-2xl shadow-lg transform hover:-translate-y-0.5 transition flex items-center gap-2">
-                            <span>Explore Visual Lessons</span> <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                        </button>
-                        <button onclick="switchTab('challenges')" class="bg-white/20 hover:bg-white/30 text-white font-fun font-bold px-6 py-3 rounded-2xl backdrop-blur-md transition flex items-center gap-2">
-                            <span>Start Story Quests</span> <i data-lucide="rocket" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Mascot Visual -->
-                <div class="mt-8 md:mt-0 z-10 flex flex-col items-center">
-                    <div class="w-48 h-48 md:w-56 md:h-56 bg-white/15 backdrop-blur-md rounded-full flex items-center justify-center p-4 border-4 border-white/30 shadow-2xl bounce-gentle relative">
-                        <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-md">
-                            <!-- Ears -->
-                            <circle cx="55" cy="55" r="25" fill="#1e293b"/>
-                            <circle cx="145" cy="55" r="25" fill="#1e293b"/>
-                            <!-- Head -->
-                            <circle cx="100" cy="110" r="65" fill="#ffffff"/>
-                            <!-- Eye Patches -->
-                            <ellipse cx="75" cy="95" rx="18" ry="22" fill="#1e293b" transform="rotate(-15 75 95)"/>
-                            <ellipse cx="125" cy="95" rx="18" ry="22" fill="#1e293b" transform="rotate(15 125 95)"/>
-                            <!-- Eyes -->
-                            <circle cx="78" cy="92" r="6" fill="#ffffff"/>
-                            <circle cx="122" cy="92" r="6" fill="#ffffff"/>
-                            <circle cx="80" cy="90" r="2" fill="#1e293b"/>
-                            <circle cx="120" cy="90" r="2" fill="#1e293b"/>
-                            <!-- Nose & Mouth -->
-                            <ellipse cx="100" cy="115" rx="8" ry="6" fill="#1e293b"/>
-                            <path d="M 92 125 Q 100 135 108 125" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
-                            <!-- Cheeks -->
-                            <circle cx="62" cy="120" r="8" fill="#fda4af" opacity="0.7"/>
-                            <circle cx="138" cy="120" r="8" fill="#fda4af" opacity="0.7"/>
-                            <!-- Cap -->
-                            <polygon points="100,20 145,35 100,50 55,35" fill="#4f46e5"/>
-                            <rect x="95" y="45" width="10" height="15" fill="#4f46e5"/>
-                            <path d="M 135,38 L 135,55 C 135,62 125,65 120,60" fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
-                        <div class="absolute -bottom-2 bg-amber-400 text-amber-950 font-fun font-bold text-xs px-3 py-1 rounded-full shadow-md">
-                            Hi, I'm Pip! 👋
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Features Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div onclick="switchTab('learn')" class="bg-white p-6 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition cursor-pointer group">
-                    <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
-                        🍕
-                    </div>
-                    <h3 class="text-xl font-bold font-fun text-slate-800 mb-2">Visual Models</h3>
-                    <p class="text-sm text-slate-500">Visualize percentages effortlessly with 100-grids and interactive pizza slice models!</p>
-                </div>
-                <div onclick="switchTab('challenges')" class="bg-white p-6 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition cursor-pointer group">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
-                        🧠
-                    </div>
-                    <h3 class="text-xl font-bold font-fun text-slate-800 mb-2">Approach-Based Feedback</h3>
-                    <p class="text-sm text-slate-500">Get evaluated on your step-by-step logic, not just the final numerical answer!</p>
-                </div>
-                <div onclick="switchTab('badges')" class="bg-white p-6 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition cursor-pointer group">
-                    <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
-                        🏆
-                    </div>
-                    <h3 class="text-xl font-bold font-fun text-slate-800 mb-2">Star & Badge Rewards</h3>
-                    <p class="text-sm text-slate-500">Earn stars for problem-solving and collect badges to fill your Trophy Room.</p>
-                </div>
-            </div>
+    <!-- Main Container -->
+    <main class="max-w-4xl w-full mx-auto p-4 sm:p-6 my-auto">
+        
+        <!-- Navigation Tabs -->
+        <div class="flex justify-center gap-3 mb-8">
+            <button onclick="switchTab('explore')" id="btn-explore" class="tab-btn active px-6 py-3 rounded-2xl font-fredoka font-semibold text-lg transition-all flex items-center gap-2 shadow-sm">
+                <i data-lucide="book-open" class="w-5 h-5"></i> Learn & Explore
+            </button>
+            <button onclick="switchTab('challenges')" id="btn-challenges" class="tab-btn px-6 py-3 rounded-2xl font-fredoka font-semibold text-lg transition-all flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-100 shadow-sm">
+                <i data-lucide="award" class="w-5 h-5"></i> Challenge Quests (<span id="badges-count">0</span>/4)
+            </button>
         </div>
 
-        <!-- ================= TAB: LEARN ================= -->
-        <div id="tab-learn" class="tab-content hidden space-y-8">
-            <div class="bg-white rounded-3xl p-6 md:p-8 border border-sky-100 shadow-sm space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6">
-                    <div>
-                        <span class="text-sky-600 text-xs font-bold uppercase tracking-wider">Visual Math Lessons</span>
-                        <h2 class="text-2xl md:text-3xl font-bold font-fun text-slate-800">Understanding Percentages (%</h2>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="changeLesson(1)" id="lesson-btn-1" class="px-4 py-2 rounded-xl font-bold text-sm bg-sky-500 text-white transition">1. The 100 Grid</button>
-                        <button onclick="changeLesson(2)" id="lesson-btn-2" class="px-4 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition">2. Pizza Slices</button>
-                        <button onclick="changeLesson(3)" id="lesson-btn-3" class="px-4 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition">3. Magic 10% Trick</button>
-                    </div>
-                </div>
+        <!-- TAB 1: LEARN & EXPLORE -->
+        <section id="tab-explore" class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-100">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <span class="bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">Visual Math</span>
+                <h2 class="text-3xl font-fredoka font-bold text-slate-800 mt-3">What is a Percentage?</h2>
+                <p class="text-slate-600 mt-2">"Percent" literally means <strong class="text-indigo-600">per 100</strong> (out of 100 equal parts). Slide the bar below to explore how numbers change!</p>
+            </div>
 
-                <!-- Lesson Content 1: 100 Grid -->
-                <div id="lesson-content-1" class="lesson-panel space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="space-y-4">
-                            <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4 flex items-start gap-3">
-                                <span class="text-2xl">🐼</span>
-                                <p class="text-sm text-sky-900 leading-relaxed font-medium">
-                                    "Cent" means <span class="font-bold">100</span> (like 100 cents in a dollar). So <span class="font-bold">Percent</span> means <span class="font-bold">"out of 100"</span>! Click on grid squares to color them and see how percentage changes!"
-                                </p>
-                            </div>
-                            <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                                <span class="font-bold font-fun text-slate-700">Shaded Squares: <span id="grid-count" class="text-sky-600">25</span> / 100</span>
-                                <div class="text-2xl font-fun font-bold bg-white px-4 py-1 rounded-xl shadow-sm border border-slate-200 text-indigo-600">
-                                    <span id="grid-percent">25</span>%
-                                </div>
-                            </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="setGridPercentage(10)" class="px-3 py-1.5 bg-sky-100 text-sky-700 font-bold rounded-xl text-xs hover:bg-sky-200 transition">10%</button>
-                                <button onclick="setGridPercentage(25)" class="px-3 py-1.5 bg-sky-100 text-sky-700 font-bold rounded-xl text-xs hover:bg-sky-200 transition">25% (Quarter)</button>
-                                <button onclick="setGridPercentage(50)" class="px-3 py-1.5 bg-sky-100 text-sky-700 font-bold rounded-xl text-xs hover:bg-sky-200 transition">50% (Half)</button>
-                                <button onclick="setGridPercentage(75)" class="px-3 py-1.5 bg-sky-100 text-sky-700 font-bold rounded-xl text-xs hover:bg-sky-200 transition">75%</button>
-                                <button onclick="setGridPercentage(100)" class="px-3 py-1.5 bg-sky-100 text-sky-700 font-bold rounded-xl text-xs hover:bg-sky-200 transition">100% (All)</button>
-                            </div>
-                        </div>
-                        <!-- Interactive Grid -->
-                        <div class="flex flex-col items-center">
-                            <div id="interactive-grid" class="grid grid-cols-10 gap-1 bg-slate-200 p-2 rounded-2xl shadow-inner max-w-[320px] aspect-square w-full">
-                                <!-- Injected via JS -->
-                            </div>
-                            <p class="text-xs text-slate-400 mt-2">💡 Tip: Tap/click any box to fill!</p>
-                        </div>
-                    </div>
+            <!-- Interactive Grid Visualizer -->
+            <div class="bg-gradient-to-r from-indigo-50 to-teal-50 rounded-2xl p-6 border border-indigo-100 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-fredoka font-semibold text-indigo-900 text-lg">Interactive Grid (100 Squares)</span>
+                    <span id="slider-val-display" class="bg-indigo-600 text-white font-fredoka px-4 py-1.5 rounded-full text-lg shadow">50%</span>
                 </div>
+                
+                <!-- 10x10 Grid -->
+                <div id="visual-grid" class="grid grid-cols-10 gap-1 max-w-xs mx-auto mb-6 bg-white p-2 rounded-xl shadow-inner border border-indigo-100"></div>
 
-                <!-- Lesson Content 2: Pizza Slices -->
-                <div id="lesson-content-2" class="lesson-panel hidden space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="space-y-4">
-                            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
-                                <span class="text-2xl">🍕</span>
-                                <p class="text-sm text-amber-950 leading-relaxed font-medium">
-                                    "If a pizza is sliced into <span class="font-bold">10 equal parts</span>, each slice is worth <span class="font-bold">10%</span>! Drag the slider below to eat slices!"
-                                </p>
-                            </div>
-                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold font-fun text-slate-700">Slices Eaten: <span id="pizza-slices-count" class="text-amber-600">4</span> / 10</span>
-                                    <div class="text-xl font-fun font-bold bg-white px-3 py-1 rounded-xl shadow-sm border border-slate-200 text-amber-600">
-                                        <span id="pizza-percent">40</span>%
-                                    </div>
-                                </div>
-                                <input type="range" min="0" max="10" value="4" oninput="updatePizza(this.value)" class="w-full accent-amber-500 cursor-pointer">
-                            </div>
-                        </div>
-                        <!-- SVG Pizza visual -->
-                        <div class="flex flex-col items-center justify-center p-6 bg-slate-50 rounded-3xl border border-slate-200">
-                            <div class="w-56 h-56 rounded-full bg-amber-200 border-4 border-amber-400 relative overflow-hidden shadow-md flex items-center justify-center">
-                                <svg viewBox="0 0 100 100" class="w-full h-full" id="pizza-svg"></svg>
-                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <div class="w-16 h-16 bg-white/85 backdrop-blur-sm rounded-full flex items-center justify-center font-fun font-bold text-amber-800 shadow-sm">
-                                        <span id="pizza-center-text">40%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Lesson Content 3: Magic 10% Trick -->
-                <div id="lesson-content-3" class="lesson-panel hidden space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="space-y-4">
-                            <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 flex items-start gap-3">
-                                <span class="text-2xl">✨</span>
-                                <p class="text-sm text-indigo-950 leading-relaxed font-medium">
-                                    "To easily find 10% of a number ending in 0, just <span class="underline decoration-indigo-400 font-bold">remove the last 0</span> (divide by 10). From 10%, you can calculate 20%, 50%, or any other percent!"
-                                </p>
-                            </div>
-                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
-                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Test a Number:</label>
-                                <input type="number" id="magic-number-input" value="80" oninput="calculateMagicTrick()" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 font-bold text-slate-800 focus:outline-none focus:border-indigo-500">
-                            </div>
-                        </div>
-                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-6 text-white shadow-md space-y-3">
-                            <h4 class="font-fun font-bold text-lg text-amber-300">🪄 Pip's Breakdown:</h4>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between bg-white/10 px-4 py-2 rounded-xl">
-                                    <span>10% of <span id="magic-base-disp">80</span>:</span>
-                                    <span class="font-bold text-amber-300" id="magic-10-disp">8</span>
-                                </div>
-                                <div class="flex justify-between bg-white/10 px-4 py-2 rounded-xl">
-                                    <span>20% (Double 10%):</span>
-                                    <span class="font-bold text-amber-300" id="magic-20-disp">16</span>
-                                </div>
-                                <div class="flex justify-between bg-white/10 px-4 py-2 rounded-xl">
-                                    <span>50% (Half of base):</span>
-                                    <span class="font-bold text-amber-300" id="magic-50-disp">40</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Navigation Controls -->
-                <div class="flex justify-between pt-4 border-t border-slate-100">
-                    <button onclick="prevLesson()" id="prev-lesson-btn" class="hidden px-5 py-2.5 rounded-xl border border-slate-200 font-bold text-sm text-slate-600 hover:bg-slate-50 transition">Previous</button>
-                    <div class="ml-auto">
-                        <button onclick="nextLesson()" id="next-lesson-btn" class="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 font-bold text-sm text-white shadow-md transition flex items-center gap-2">
-                            <span>Next Lesson</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                        <button onclick="switchTab('challenges')" id="start-quest-btn" class="hidden px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 font-fun font-bold text-sm text-amber-950 shadow-md transition flex items-center gap-2">
-                            <span>Start Story Quests! 🚀</span>
-                        </button>
+                <!-- Range Slider -->
+                <div class="max-w-md mx-auto">
+                    <input type="range" id="percent-slider" min="0" max="100" value="50" class="w-full h-3 bg-indigo-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" oninput="updateVisualizer(this.value)">
+                    <div class="flex justify-between text-xs text-slate-500 font-semibold mt-2">
+                        <span>0% (None)</span>
+                        <span>50% (Half)</span>
+                        <span>100% (All)</span>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ================= TAB: CHALLENGES (STORY QUESTS) ================= -->
-        <div id="tab-challenges" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 md:p-8 border border-sky-100 shadow-sm space-y-6">
-                <!-- Header -->
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider" id="quest-tag">Quest 1 of 3</span>
-                            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">+50 Stars ⭐</span>
-                        </div>
-                        <h2 class="text-2xl md:text-3xl font-bold font-fun text-slate-800 mt-2" id="quest-title">Loading...</h2>
-                    </div>
-                    <div class="flex items-center gap-1.5" id="quest-dots">
-                        <span class="w-3 h-3 rounded-full bg-indigo-600"></span>
-                        <span class="w-3 h-3 rounded-full bg-slate-200"></span>
-                        <span class="w-3 h-3 rounded-full bg-slate-200"></span>
-                    </div>
+            <div class="grid sm:grid-cols-3 gap-4 text-center">
+                <div class="p-4 rounded-2xl bg-teal-50 border border-teal-100">
+                    <h3 class="font-fredoka font-bold text-teal-800 text-lg">🍕 Pizza Rule</h3>
+                    <p class="text-slate-600 text-sm mt-1">If a pizza has 100 slices and you eat 25, you ate 25% of the pizza!</p>
                 </div>
-
-                <!-- Story Box -->
-                <div class="bg-gradient-to-r from-sky-50 to-indigo-50 border border-sky-200 rounded-2xl p-6 flex items-start gap-4">
-                    <div class="text-4xl">🐼</div>
-                    <div class="space-y-1">
-                        <h4 class="font-fun font-bold text-sky-900">Pip's Mission:</h4>
-                        <p class="text-slate-700 text-sm md:text-base leading-relaxed font-medium" id="quest-story">Loading story...</p>
-                    </div>
+                <div class="p-4 rounded-2xl bg-pink-50 border border-pink-100">
+                    <h3 class="font-fredoka font-bold text-pink-800 text-lg">🛍️ Sale Discounts</h3>
+                    <p class="text-slate-600 text-sm mt-1">A 50% discount means you save half the price. 100% means it's completely free!</p>
                 </div>
-
-                <!-- Approach Judge Section -->
-                <div class="space-y-4 bg-slate-50 border border-slate-200 rounded-3xl p-6">
-                    <div class="flex items-center justify-between">
-                        <h3 class="font-fun font-bold text-lg text-slate-800 flex items-center gap-2">
-                            <span>🧠 Step-by-Step Approach</span>
-                        </h3>
-                        <span id="approach-status" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">Step 1 of 2</span>
-                    </div>
-
-                    <!-- Step 1 Panel -->
-                    <div id="step-container-1" class="step-panel space-y-3">
-                        <label class="block font-medium text-slate-700 text-sm" id="step-1-label">Question text...</label>
-                        <div id="step-1-options" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                    </div>
-
-                    <!-- Step 2 Panel -->
-                    <div id="step-container-2" class="step-panel hidden space-y-3">
-                        <label class="block font-medium text-slate-700 text-sm" id="step-2-label">Question text...</label>
-                        <div id="step-2-options" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                    </div>
-
-                    <!-- Final Input Panel -->
-                    <div id="step-container-3" class="step-panel hidden space-y-3">
-                        <label class="block font-medium text-slate-700 text-sm" id="step-final-label">Final calculation:</label>
-                        <div class="flex gap-3">
-                            <input type="number" id="final-answer-input" placeholder="Your answer..." class="flex-1 bg-white border border-slate-300 rounded-2xl px-4 py-3 font-bold text-slate-800 focus:outline-none focus:border-indigo-500 shadow-sm">
-                            <button onclick="submitQuestAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-fun font-bold px-6 py-3 rounded-2xl shadow-md transition">Submit Answer! 🎉</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feedback Banner -->
-                <div id="quest-feedback" class="hidden rounded-2xl p-4 text-sm font-medium flex items-center justify-between transition-all">
-                    <div class="flex items-center gap-3">
-                        <span id="feedback-icon" class="text-2xl">🌟</span>
-                        <p id="feedback-text">Feedback message...</p>
-                    </div>
-                    <button onclick="nextQuest()" id="next-quest-btn" class="hidden bg-white text-slate-800 font-bold px-4 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition">Next Quest 🚀</button>
+                <div class="p-4 rounded-2xl bg-amber-50 border border-amber-100">
+                    <h3 class="font-fredoka font-bold text-amber-800 text-lg">🔋 Battery Life</h3>
+                    <p class="text-slate-600 text-sm mt-1">100% battery means your phone is fully charged and ready to play games!</p>
                 </div>
             </div>
-        </div>
 
-        <!-- ================= TAB: BADGES ================= -->
-        <div id="tab-badges" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 md:p-8 border border-sky-100 shadow-sm space-y-6">
-                <div class="border-b border-slate-100 pb-6">
-                    <span class="text-amber-600 text-xs font-bold uppercase tracking-wider">Trophy Hall</span>
-                    <h2 class="text-2xl md:text-3xl font-bold font-fun text-slate-800">Your Badge Collection</h2>
-                    <p class="text-sm text-slate-500 mt-1">Complete problem quests to unlock all 4 trophies!</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6" id="badges-grid"></div>
+            <div class="mt-8 text-center">
+                <button onclick="switchTab('challenges')" class="bg-gradient-to-r from-indigo-600 to-teal-500 text-white font-fredoka font-bold px-8 py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition transform hover:-translate-y-0.5 flex items-center gap-2 mx-auto">
+                    Ready for the Challenges? Let's Go! <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
             </div>
-        </div>
+        </section>
+
+        <!-- TAB 2: CHALLENGE QUESTS -->
+        <section id="tab-challenges" class="hidden bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-100">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b border-slate-100 gap-4">
+                <div>
+                    <h2 class="text-2xl font-fredoka font-bold text-slate-800">Percentage Quest Arena</h2>
+                    <p class="text-slate-500 text-sm">Solve problems by explaining your step-by-step thinking approach!</p>
+                </div>
+                <div class="flex items-center gap-2 bg-indigo-50 px-4 py-2 rounded-2xl border border-indigo-200">
+                    <i data-lucide="trophy" class="w-5 h-5 text-amber-500"></i>
+                    <span class="font-fredoka font-bold text-indigo-900"><span id="badges-earned">0</span> / 4 Badges Unlocked</span>
+                </div>
+            </div>
+
+            <!-- Quest Cards Container -->
+            <div id="quests-container" class="space-y-6"></div>
+
+            <!-- Certificate Banner (Unlocked when all 4 are completed) -->
+            <div id="certificate-banner" class="hidden mt-8 p-6 bg-gradient-to-r from-amber-50 to-teal-50 border-2 border-dashed border-teal-300 rounded-3xl text-center">
+                <div class="inline-block p-3 bg-amber-400 text-white rounded-2xl shadow-md mb-3">
+                    <i data-lucide="award" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-2xl font-fredoka font-bold text-slate-800">Incredible Job! You've Mastered All Quests! 🎉</h3>
+                <p class="text-slate-600 text-sm mt-1 max-w-md mx-auto">You've successfully solved every challenge and collected all badges. Download your official certificate below!</p>
+                
+                <div class="mt-4 flex flex-col sm:flex-row justify-center items-center gap-3">
+                    <input type="text" id="student-name-input" placeholder="Enter Explorer's Name" class="px-4 py-3 rounded-xl border border-slate-300 font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 w-64 text-center">
+                    <button onclick="generateCertificate()" class="bg-teal-600 hover:bg-teal-700 text-white font-fredoka font-bold px-6 py-3 rounded-xl shadow-lg transition flex items-center gap-2">
+                        <i data-lucide="download" class="w-5 h-5"></i> Download Certificate
+                    </button>
+                </div>
+            </div>
+        </section>
 
     </main>
 
-    <!-- Celebration Modal -->
-    <div id="modal-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full text-center space-y-4 shadow-2xl transform scale-95 transition-transform" id="modal-content">
-            <div class="w-20 h-20 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center text-4xl mx-auto shadow-inner">
-                🏆
+    <!-- Footer with Attribution -->
+    <footer class="w-full py-6 mt-12 bg-white/60 border-t border-indigo-100 text-center text-slate-500 text-sm font-medium">
+        <p>💡 <strong>Ideated by Mahua Banerjee</strong> | Built with <strong>Gemini</strong> 🚀</p>
+    </footer>
+
+    <!-- Hidden Certificate Template for PDF Export -->
+    <div id="certificate-template" class="hidden">
+        <div style="padding: 50px; background: #ffffff; border: 12px solid #4F46E5; text-align: center; font-family: 'Fredoka', sans-serif; width: 800px; margin: 0 auto; box-sizing: border-box;">
+            <div style="color: #4F46E5; font-size: 36px; font-weight: bold; margin-bottom: 10px;">🏆 PercentPal Certificate of Mastery 🏆</div>
+            <p style="font-size: 18px; color: #64748B; margin-top: 5px;">This is proudly presented to</p>
+            <div id="cert-name-display" style="font-size: 32px; color: #0D9488; font-weight: bold; border-bottom: 3px dashed #CBD5E1; display: inline-block; padding: 0 30px; margin: 15px 0;">Explorer</div>
+            <p style="font-size: 18px; color: #334155; margin-top: 15px;">for successfully completing all percentage challenges and mastering problem-solving approaches on</p>
+            <div style="font-size: 24px; color: #4F46E5; font-weight: bold; margin: 10px 0;">PercentPal</div>
+            <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #E2E8F0; padding-top: 20px;">
+                <div style="font-size: 14px; color: #64748B;">Date: <span id="cert-date"></span></div>
+                <div style="font-size: 14px; color: #475569; font-weight: bold;">Ideated by Mahua Banerjee | Built with Gemini 🚀</div>
             </div>
-            <h3 class="text-2xl font-bold font-fun text-slate-800" id="modal-title">Quest Mastered!</h3>
-            <p class="text-sm text-slate-600" id="modal-desc">You unlocked a new badge and earned 50 stars!</p>
-            <button onclick="closeModal()" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-fun font-bold py-3 rounded-2xl shadow-md transition">Awesome! Continue 🚀</button>
         </div>
     </div>
 
-    <!-- Website Visible Footer -->
-    <footer class="bg-white/80 border-t border-slate-200 py-6 mt-12 text-center">
-        <p class="text-slate-600 font-fun text-sm md:text-base">
-            💡 <strong>Ideated by Mahua Banerjee</strong> &nbsp;|&nbsp; Built with <strong>Gemini</strong> 🚀
-        </p>
-    </footer>
-
-    <!-- App Logic JavaScript -->
+    <!-- Application JavaScript Logic -->
     <script>
-        let state = {
-            stars: 100,
-            badgesUnlocked: [0],
-            currentLesson: 1,
-            currentQuestIndex: 0,
-            gridPercentage: 25,
-            pizzaSlices: 4
-        };
+        // Initialize Lucide Icons
+        lucide.createIcons();
 
+        // Local Visitor Counter Simulation & Initialization
+        let visits = localStorage.getItem('percentpal_visits');
+        if (!visits) {
+            visits = 142; // Base starting count
+        } else {
+            visits = parseInt(visits) + 1;
+        }
+        localStorage.setItem('percentpal_visits', visits);
+        document.getElementById('total-visitors').innerText = visits;
+
+        // Interactive 10x10 Grid Generator
+        const gridEl = document.getElementById('visual-grid');
+        for (let i = 0; i < 100; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'w-6 h-6 rounded-sm bg-slate-100 transition-colors duration-200';
+            cell.id = `cell-${i}`;
+            gridEl.appendChild(cell);
+        }
+
+        function updateVisualizer(val) {
+            document.getElementById('slider-val-display').innerText = `${val}%`;
+            for (let i = 0; i < 100; i++) {
+                const cell = document.getElementById(`cell-${i}`);
+                if (i < val) {
+                    cell.className = 'w-6 h-6 rounded-sm bg-indigo-600 transition-colors duration-150';
+                } else {
+                    cell.className = 'w-6 h-6 rounded-sm bg-slate-100 transition-colors duration-150';
+                }
+            }
+        }
+        updateVisualizer(50); // Initial call
+
+        // Tab Switching Logic
+        function switchTab(tab) {
+            if (tab === 'explore') {
+                document.getElementById('tab-explore').classList.remove('hidden');
+                document.getElementById('tab-challenges').classList.add('hidden');
+                document.getElementById('btn-explore').classList.add('active', 'bg-indigo-600', 'text-white');
+                document.getElementById('btn-explore').classList.remove('bg-white', 'text-slate-600');
+                document.getElementById('btn-challenges').classList.remove('active', 'bg-indigo-600', 'text-white');
+                document.getElementById('btn-challenges').classList.add('bg-white', 'text-slate-600');
+            } else {
+                document.getElementById('tab-explore').classList.add('hidden');
+                document.getElementById('tab-challenges').classList.remove('hidden');
+                document.getElementById('btn-challenges').classList.add('active', 'bg-indigo-600', 'text-white');
+                document.getElementById('btn-challenges').classList.remove('bg-white', 'text-slate-600');
+                document.getElementById('btn-explore').classList.remove('active', 'bg-indigo-600', 'text-white');
+                document.getElementById('btn-explore').classList.add('bg-white', 'text-slate-600');
+            }
+            lucide.createIcons();
+        }
+
+        // Quests Data
         const quests = [
             {
-                id: 0,
-                tag: "Quest 1 of 3",
-                title: "The Party Pizza Share",
-                story: "Pip ordered 50 pizza slices for a panda party. The hungry pandas ate 20% of the pizza slices. How many slices were eaten?",
-                step1Title: "What is the best logical 1st step?",
-                step1Options: [
-                    { text: "Divide 50 by 10 to find 10% first", correct: true },
-                    { text: "Multiply 50 by 20 directly", correct: false },
-                    { text: "Subtract 20 from 50", correct: false }
-                ],
-                step1Feedback: "Spot on! Finding 10% first (50 ÷ 10 = 5) makes percentages easy!",
-                step2Title: "If 10% is 5 slices, how do we find 20%?",
-                step2Options: [
-                    { text: "Double our 10% value (5 × 2)", correct: true },
-                    { text: "Subtract 5 from 20", correct: false },
-                    { text: "Divide 5 by 2", correct: false }
-                ],
-                step2Feedback: "Awesome! 20% is double of 10%, so 5 × 2 = 10.",
-                finalAnswer: 10,
-                badgeReward: { id: 1, name: "Pizza Master", icon: "🍕", desc: "Mastered percentage shares!" }
-            },
-            {
                 id: 1,
-                tag: "Quest 2 of 3",
-                title: "Arcade Game Discount",
-                story: "A toy laser gun costs $80 credits. Today there is a 25% discount. How many credits do you save?",
-                step1Title: "How should we break down 25%?",
-                step1Options: [
-                    { text: "Break 25% into 10% + 10% + 5%", correct: true },
-                    { text: "Subtract 25 from 80", correct: false },
-                    { text: "Divide 80 by 25", correct: false }
+                title: "Quest 1: The Birthday Pizza Party 🍕",
+                story: "Leo ordered a giant pizza with 50 slices for his birthday party. His friends ate 30% of the slices. How many slices did they eat?",
+                options: [
+                    { text: "A) 10 slices", correct: false, explanation: "Not quite! 10 out of 50 is only 20%." },
+                    { text: "B) 15 slices", correct: true, explanation: "Spot on! 10% of 50 is 5, so 30% is 5 × 3 = 15 slices!" },
+                    { text: "C) 20 slices", correct: false, explanation: "Too high! 20 out of 50 is 40%." }
                 ],
-                step1Feedback: "Smart thinking! 10% of 80 is 8, so another 10% is 8, and 5% is half of 8 (which is 4).",
-                step2Title: "Add up the parts: 8 + 8 + 4 = ?",
-                step2Options: [
-                    { text: "20 credits saved", correct: true },
-                    { text: "16 credits saved", correct: false },
-                    { text: "25 credits saved", correct: false }
-                ],
-                step2Feedback: "Exactly! 8 + 8 + 4 = 20 credits saved!",
-                finalAnswer: 20,
-                badgeReward: { id: 2, name: "Arcade Wizard", icon: "🎮", desc: "Calculated store discounts like a pro!" }
+                badgeName: "Pizza Master"
             },
             {
                 id: 2,
-                tag: "Quest 3 of 3",
-                title: "Bamboo Harvest Ratio",
-                story: "Pip harvested 200 bamboo shoots. The pandas ate 150 of them. What percentage (%) was eaten?",
-                step1Title: "How do we express part vs total whole?",
-                step1Options: [
-                    { text: "Write the fraction 150 out of 200 (150/200)", correct: true },
-                    { text: "Multiply 200 by 150", correct: false },
-                    { text: "Subtract 150 from 200", correct: false }
+                title: "Quest 2: The Toy Store Sale 🧸",
+                story: "A cool robot toy costs $80. Today, there is a special 25% discount sale! How much money do you save?",
+                options: [
+                    { text: "A) $20", correct: true, explanation: "Brilliant! 25% means one-quarter (1/4). One-fourth of $80 is $20!" },
+                    { text: "B) $25", correct: false, explanation: "Check again! 25% is a fraction of the total price, not $25 flat." },
+                    { text: "C) $40", correct: false, explanation: "That would be a 50% discount!" }
                 ],
-                step1Feedback: "Great setup! Percentages compare the part (150) to the whole (200).",
-                step2Title: "Since 100/200 is 50%, and 50/200 is 25%, what is 150/200?",
-                step2Options: [
-                    { text: "50% + 25% = 75%", correct: true },
-                    { text: "50%", correct: false },
-                    { text: "90%", correct: false }
+                badgeName: "Smart Shopper"
+            },
+            {
+                id: 3,
+                title: "Quest 3: The Video Game Levels 🎮",
+                story: "Maya has 40 levels in her favorite puzzle game. She has successfully completed 75% of them. How many levels has she finished?",
+                options: [
+                    { text: "A) 25 levels", correct: false, explanation: "Close, but 75% is three-quarters of the game." },
+                    { text: "B) 30 levels", correct: true, explanation: "Awesome! 75% is 3/4. Three-quarters of 40 is (40 ÷ 4) × 3 = 30 levels!" },
+                    { text: "C) 35 levels", correct: false, explanation: "Just a bit too high! Keep up the great thinking." }
                 ],
-                step2Feedback: "Brilliant logic! 150/200 simplifies to 3/4 or 75%!",
-                finalAnswer: 75,
-                badgeReward: { id: 3, name: "Bamboo Guru", icon: "🎋", desc: "Solved part-to-whole percentage ratios!" }
+                badgeName: "Level Legend"
+            },
+            {
+                id: 4,
+                title: "Quest 4: The Library Reading Goal 📚",
+                story: "The school library has a goal of reading 200 books this term. The students have already read 110 books. What percentage of their goal have they reached?",
+                options: [
+                    { text: "A) 50%", correct: false, explanation: "50% of 200 would be 100 books. They've read slightly more!" },
+                    { text: "B) 55%", correct: true, explanation: "Fantastic math! 110 out of 200 is 110/200 = 55/100 = 55%!" },
+                    { text: "C) 60%", correct: false, explanation: "60% of 200 would be 120 books. So close!" }
+                ],
+                badgeName: "Reading Champ"
             }
         ];
 
-        const allBadges = [
-            { id: 0, name: "Percent Starter", icon: "🌱", desc: "Began your percentage quest with Pip!", unlocked: true },
-            { id: 1, name: "Pizza Master", icon: "🍕", desc: "Mastered percentage shares!", unlocked: false },
-            { id: 2, name: "Arcade Wizard", icon: "🎮", desc: "Calculated store discounts like a pro!", unlocked: false },
-            { id: 3, name: "Bamboo Guru", icon: "🎋", desc: "Solved part-to-whole percentage ratios!", unlocked: false }
-        ];
+        let unlockedBadges = JSON.parse(localStorage.getItem('percentpal_badges')) || [];
 
-        window.onload = function() {
-            lucide.createIcons();
-            initInteractiveGrid();
-            updatePizza(4);
-            calculateMagicTrick();
-            loadQuest(0);
-            renderBadges();
-            updateStatsUI();
-        };
+        function renderQuests() {
+            const container = document.getElementById('quests-container');
+            container.innerHTML = '';
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            ['home', 'learn', 'challenges', 'badges'].forEach(t => {
-                const btn = document.getElementById(`nav-${t}`);
-                if (btn) btn.className = t === tabId ? "px-4 py-2 rounded-xl transition bg-sky-50 text-sky-600 font-bold" : "px-4 py-2 rounded-xl transition hover:bg-sky-50 text-slate-600 font-semibold";
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function updateStatsUI() {
-            document.getElementById('star-counter').innerText = state.stars;
-            document.getElementById('badge-count').innerText = state.badgesUnlocked.length;
-        }
-
-        function initInteractiveGrid() {
-            const grid = document.getElementById('interactive-grid');
-            grid.innerHTML = '';
-            for (let i = 0; i < 100; i++) {
-                const cell = document.createElement('div');
-                cell.className = `aspect-square rounded-sm cursor-pointer transition-colors ${i < state.gridPercentage ? 'bg-sky-500 shadow-sm' : 'bg-white hover:bg-sky-100'}`;
-                cell.onclick = () => setGridPercentage(i + 1);
-                grid.appendChild(cell);
-            }
-        }
-
-        function setGridPercentage(val) {
-            state.gridPercentage = val;
-            document.getElementById('grid-count').innerText = val;
-            document.getElementById('grid-percent').innerText = val;
-            const cells = document.getElementById('interactive-grid').children;
-            for (let i = 0; i < 100; i++) {
-                cells[i].className = i < val ? "aspect-square rounded-sm cursor-pointer bg-sky-500 shadow-sm" : "aspect-square rounded-sm cursor-pointer bg-white hover:bg-sky-100";
-            }
-        }
-
-        function updatePizza(val) {
-            state.pizzaSlices = parseInt(val);
-            document.getElementById('pizza-slices-count').innerText = val;
-            const pct = val * 10;
-            document.getElementById('pizza-percent').innerText = pct;
-            document.getElementById('pizza-center-text').innerText = pct + '%';
-            const svg = document.getElementById('pizza-svg');
-            svg.innerHTML = '';
-            for (let i = 0; i < 10; i++) {
-                const a1 = (i * 36) - 90, a2 = ((i + 1) * 36) - 90;
-                const x1 = 50 + 45 * Math.cos((Math.PI * a1) / 180), y1 = 50 + 45 * Math.sin((Math.PI * a1) / 180);
-                const x2 = 50 + 45 * Math.cos((Math.PI * a2) / 180), y2 = 50 + 45 * Math.sin((Math.PI * a2) / 180);
-                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                path.setAttribute("d", `M 50 50 L ${x1} ${y1} A 45 45 0 0 1 ${x2} ${y2} Z`);
-                path.setAttribute("fill", i < val ? "#f59e0b" : "#fef3c7");
-                path.setAttribute("stroke", "#d97706");
-                path.setAttribute("stroke-width", "0.5");
-                svg.appendChild(path);
-            }
-        }
-
-        function calculateMagicTrick() {
-            const num = parseFloat(document.getElementById('magic-number-input').value) || 0;
-            document.getElementById('magic-base-disp').innerText = num;
-            const ten = num / 10;
-            document.getElementById('magic-10-disp').innerText = ten;
-            document.getElementById('magic-20-disp').innerText = ten * 2;
-            document.getElementById('magic-50-disp').innerText = num / 2;
-        }
-
-        function changeLesson(num) {
-            state.currentLesson = num;
-            for (let i = 1; i <= 3; i++) {
-                document.getElementById(`lesson-content-${i}`).classList.add('hidden');
-                document.getElementById(`lesson-btn-${i}`).className = "px-4 py-2 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
-            }
-            document.getElementById(`lesson-content-${num}`).classList.remove('hidden');
-            document.getElementById(`lesson-btn-${num}`).className = "px-4 py-2 rounded-xl font-bold text-sm bg-sky-500 text-white transition";
-            document.getElementById('prev-lesson-btn').classList.toggle('hidden', num === 1);
-            document.getElementById('next-lesson-btn').classList.toggle('hidden', num === 3);
-            document.getElementById('start-quest-btn').classList.toggle('hidden', num !== 3);
-        }
-
-        function nextLesson() { if (state.currentLesson < 3) changeLesson(state.currentLesson + 1); }
-        function prevLesson() { if (state.currentLesson > 1) changeLesson(state.currentLesson - 1); }
-
-        function loadQuest(index) {
-            state.currentQuestIndex = index;
-            const q = quests[index];
-            document.getElementById('quest-tag').innerText = q.tag;
-            document.getElementById('quest-title').innerText = q.title;
-            document.getElementById('quest-story').innerText = q.story;
-
-            document.getElementById('step-container-1').classList.remove('hidden');
-            document.getElementById('step-container-2').classList.add('hidden');
-            document.getElementById('step-container-3').classList.add('hidden');
-            document.getElementById('quest-feedback').classList.add('hidden');
-            document.getElementById('approach-status').innerText = "Step 1 of 2";
-
-            document.getElementById('step-1-label').innerText = q.step1Title;
-            const opts1 = document.getElementById('step-1-options');
-            opts1.innerHTML = '';
-            q.step1Options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "p-3 rounded-2xl border border-slate-200 bg-white hover:bg-sky-50 text-left text-sm font-medium transition";
-                btn.innerText = opt.text;
-                btn.onclick = () => selectStepOption(1, opt.correct, q.step1Feedback);
-                opts1.appendChild(btn);
-            });
-        }
-
-        function selectStepOption(stepNum, isCorrect, feedbackText) {
-            const feedbackBox = document.getElementById('quest-feedback');
-            feedbackBox.classList.remove('hidden');
-
-            if (isCorrect) {
-                feedbackBox.className = "rounded-2xl p-4 text-sm font-medium flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-900";
-                document.getElementById('feedback-icon').innerText = "🎉";
-                document.getElementById('feedback-text').innerHTML = `<span class="font-bold">Great Approach!</span> ${feedbackText}`;
-
-                setTimeout(() => {
-                    feedbackBox.classList.add('hidden');
-                    if (stepNum === 1) {
-                        document.getElementById('step-container-1').classList.add('hidden');
-                        document.getElementById('step-container-2').classList.remove('hidden');
-                        document.getElementById('approach-status').innerText = "Step 2 of 2";
-
-                        const q = quests[state.currentQuestIndex];
-                        document.getElementById('step-2-label').innerText = q.step2Title;
-                        const opts2 = document.getElementById('step-2-options');
-                        opts2.innerHTML = '';
-                        q.step2Options.forEach(opt => {
-                            const btn = document.createElement('button');
-                            btn.className = "p-3 rounded-2xl border border-slate-200 bg-white hover:bg-sky-50 text-left text-sm font-medium transition";
-                            btn.innerText = opt.text;
-                            btn.onclick = () => selectStepOption(2, opt.correct, q.step2Feedback);
-                            opts2.appendChild(btn);
-                        });
-                    } else if (stepNum === 2) {
-                        document.getElementById('step-container-2').classList.add('hidden');
-                        document.getElementById('step-container-3').classList.remove('hidden');
-                        document.getElementById('approach-status').innerText = "Final Step";
-                        document.getElementById('final-answer-input').value = '';
-                    }
-                }, 1000);
-            } else {
-                feedbackBox.className = "rounded-2xl p-4 text-sm font-medium flex items-center gap-3 bg-rose-50 border border-rose-200 text-rose-900 shake";
-                document.getElementById('feedback-icon').innerText = "💡";
-                document.getElementById('feedback-text').innerHTML = `<span class="font-bold">Not quite!</span> Try thinking step-by-step or finding 10% first.`;
-                setTimeout(() => feedbackBox.classList.remove('shake'), 500);
-            }
-        }
-
-        function submitQuestAnswer() {
-            const userAns = parseFloat(document.getElementById('final-answer-input').value);
-            const q = quests[state.currentQuestIndex];
-            const feedbackBox = document.getElementById('quest-feedback');
-
-            feedbackBox.classList.remove('hidden');
-
-            if (userAns === q.finalAnswer) {
-                feedbackBox.className = "rounded-2xl p-4 text-sm font-medium flex items-center justify-between bg-emerald-50 border border-emerald-200 text-emerald-900";
-                document.getElementById('feedback-icon').innerText = "🏆";
-                document.getElementById('feedback-text').innerHTML = `<span class="font-bold">Correct Answer!</span> You solved it using a great approach! <span class='text-amber-600 font-bold'>+50 ⭐</span>`;
-                document.getElementById('next-quest-btn').classList.remove('hidden');
-
-                state.stars += 50;
-                if (!state.badgesUnlocked.includes(q.badgeReward.id)) {
-                    state.badgesUnlocked.push(q.badgeReward.id);
-                }
-                updateStatsUI();
-                renderBadges();
-                showModal(q.badgeReward);
-            } else {
-                feedbackBox.className = "rounded-2xl p-4 text-sm font-medium flex items-center gap-3 bg-rose-50 border border-rose-200 text-rose-900 shake";
-                document.getElementById('feedback-icon').innerText = "🤔";
-                document.getElementById('feedback-text').innerText = "Recheck your final numbers and give it another shot!";
-                document.getElementById('next-quest-btn').classList.add('hidden');
-                setTimeout(() => feedbackBox.classList.remove('shake'), 500);
-            }
-        }
-
-        function nextQuest() {
-            document.getElementById('quest-feedback').classList.add('hidden');
-            if (state.currentQuestIndex < quests.length - 1) {
-                loadQuest(state.currentQuestIndex + 1);
-            } else {
-                switchTab('badges');
-            }
-        }
-
-        function renderBadges() {
-            const grid = document.getElementById('badges-grid');
-            grid.innerHTML = '';
-            allBadges.forEach(b => {
-                const isUnlocked = state.badgesUnlocked.includes(b.id);
+            quests.forEach((q, idx) => {
+                const isCompleted = unlockedBadges.includes(q.id);
                 const card = document.createElement('div');
-                card.className = `p-6 rounded-3xl border flex flex-col items-center text-center space-y-3 transition ${isUnlocked ? 'bg-white border-amber-200 shadow-sm' : 'bg-slate-50 border-slate-200 opacity-60'}`;
+                card.className = `p-6 rounded-2xl border transition-all ${isCompleted ? 'bg-emerald-50/50 border-emerald-200' : 'bg-slate-50 border-slate-200'}`;
+                
+                let optionsHtml = '';
+                q.options.forEach((opt, oIdx) => {
+                    optionsHtml += `
+                        <button onclick="checkAnswer(${q.id}, ${oIdx})" id="q${q.id}-opt${oIdx}" 
+                            class="w-full text-left p-3.5 rounded-xl border border-slate-200 bg-white font-medium hover:border-indigo-400 hover:bg-indigo-50/30 transition flex justify-between items-center">
+                            <span>${opt.text}</span>
+                            <span id="q${q.id}-icon${oIdx}" class="text-xs"></span>
+                        </button>
+                    `;
+                });
+
                 card.innerHTML = `
-                    <div class="w-16 h-16 rounded-2xl ${isUnlocked ? 'bg-amber-100 text-amber-500 shadow-inner' : 'bg-slate-200 text-slate-400'} flex items-center justify-center text-3xl">
-                        ${isUnlocked ? b.icon : '🔒'}
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-fredoka font-bold text-lg text-slate-800">${q.title}</h3>
+                        <span class="text-xs font-bold px-3 py-1 rounded-full ${isCompleted ? 'bg-emerald-200 text-emerald-800' : 'bg-indigo-100 text-indigo-700'}">
+                            ${isCompleted ? '✅ Completed' : '🏆 Badge: ' + q.badgeName}
+                        </span>
                     </div>
-                    <div>
-                        <h4 class="font-fun font-bold text-base text-slate-800">${b.name}</h4>
-                        <p class="text-xs text-slate-500 mt-1">${b.desc}</p>
+                    <p class="text-slate-600 text-sm mb-4">${q.story}</p>
+                    <div class="space-y-2" id="q${q.id}-options">
+                        ${optionsHtml}
                     </div>
-                    <span class="text-xs font-bold px-3 py-1 rounded-full ${isUnlocked ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-500'}">
-                        ${isUnlocked ? 'Unlocked ⭐' : 'Locked'}
-                    </span>
+                    <div id="q${q.id}-feedback" class="mt-3 text-sm font-medium hidden"></div>
                 `;
-                grid.appendChild(card);
+                container.appendChild(card);
+            });
+
+            updateBadgeStats();
+        }
+
+        function checkAnswer(questId, optIdx) {
+            const quest = quests.find(q => q.id === questId);
+            const selectedOpt = quest.options[optIdx];
+            const feedbackEl = document.getElementById(`q${questId}-feedback`);
+            
+            feedbackEl.classList.remove('hidden');
+            if (selectedOpt.correct) {
+                feedbackEl.className = 'mt-3 text-sm font-semibold text-emerald-600 bg-emerald-50 p-3 rounded-xl border border-emerald-200';
+                feedbackEl.innerHTML = `🎉 Correct! ${selectedOpt.explanation}`;
+                
+                if (!unlockedBadges.includes(questId)) {
+                    unlockedBadges.push(questId);
+                    localStorage.setItem('percentpal_badges', JSON.stringify(unlockedBadges));
+                    renderQuests();
+                }
+            } else {
+                feedbackEl.className = 'mt-3 text-sm font-semibold text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-200';
+                feedbackEl.innerHTML = `💡 Not quite right. ${selectedOpt.explanation}`;
+            }
+        }
+
+        function updateBadgeStats() {
+            const count = unlockedBadges.length;
+            document.getElementById('badges-count').innerText = count;
+            document.getElementById('badges-earned').innerText = count;
+
+            if (count === 4) {
+                document.getElementById('certificate-banner').classList.remove('hidden');
+            } else {
+                document.getElementById('certificate-banner').classList.add('hidden');
+            }
+            lucide.createIcons();
+        }
+
+        function generateCertificate() {
+            const nameInput = document.getElementById('student-name-input').value.trim();
+            const studentName = nameInput ? nameInput : "Super Explorer";
+            
+            document.getElementById('cert-name-display').innerText = studentName;
+            document.getElementById('cert-date').innerText = new Date().toLocaleDateString();
+
+            const element = document.getElementById('certificate-template');
+            element.classList.remove('hidden');
+
+            const opt = {
+                margin:       0.2,
+                filename:     `${studentName}_PercentPal_Certificate.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.add('hidden');
             });
         }
 
-        function showModal(badge) {
-            document.getElementById('modal-title').innerText = `Unlocked: ${badge.name}!`;
-            document.getElementById('modal-desc').innerText = `${badge.desc} +50 Stars added!`;
-            document.getElementById('modal-overlay').classList.remove('hidden');
-            setTimeout(() => document.getElementById('modal-content').classList.replace('scale-95', 'scale-100'), 10);
-        }
-
-        function closeModal() {
-            document.getElementById('modal-content').classList.replace('scale-100', 'scale-95');
-            setTimeout(() => document.getElementById('modal-overlay').classList.add('hidden'), 200);
-        }
+        // Initial Quests Render
+        renderQuests();
     </script>
 </body>
 </html>
