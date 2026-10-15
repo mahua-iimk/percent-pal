@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+<!-- PercentPal Last Updated: October 15, 2026, 10:46 AM | Pip the Panda Edition -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PercentPal - The Interactive Percentage Adventure!</title>
+    <title>PercentPal - The Interactive Percentage Adventure with Pip!</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Fredoka & Inter -->
@@ -16,6 +17,9 @@
         body { font-family: 'Inter', sans-serif; }
         .font-fredoka { font-family: 'Fredoka', sans-serif; }
         .tab-btn.active { background-color: #4F46E5; color: white; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); }
+        .badge-card { transition: all 0.3s ease; }
+        .badge-locked { filter: grayscale(100%); opacity: 0.4; }
+        .badge-unlocked { filter: grayscale(0%); opacity: 1; transform: scale(1.05); }
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen text-slate-800 flex flex-col justify-between">
@@ -24,12 +28,12 @@
     <header class="w-full bg-white/80 backdrop-blur-md shadow-sm border-b border-indigo-100 py-4 px-6 sticky top-0 z-50">
         <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <div class="bg-indigo-600 text-white p-2.5 rounded-2xl shadow-md">
-                    <i data-lucide="percent" class="w-7 h-7"></i>
+                <div class="bg-indigo-600 text-white p-2.5 rounded-2xl shadow-md text-2xl">
+                    🐼
                 </div>
                 <div>
                     <h1 class="text-2xl font-fredoka font-bold text-indigo-900 tracking-wide">Percent<span class="text-teal-500">Pal</span></h1>
-                    <p class="text-xs text-slate-500 font-medium">Interactive Percentage Adventure for Kids</p>
+                    <p class="text-xs text-slate-500 font-medium">Interactive Percentage Adventure with Pip!</p>
                 </div>
             </div>
 
@@ -50,8 +54,17 @@
     <!-- Main Container -->
     <main class="max-w-4xl w-full mx-auto p-4 sm:p-6 my-auto">
         
+        <!-- Pip Welcome Banner -->
+        <div class="bg-gradient-to-r from-amber-100 via-orange-100 to-yellow-100 p-5 rounded-3xl border-2 border-amber-200 shadow-sm mb-6 flex items-center gap-4">
+            <div class="text-5xl animate-bounce">🐼</div>
+            <div>
+                <h2 class="font-fredoka font-bold text-xl text-amber-900">Hi! I'm Pip the Panda Explorer!</h2>
+                <p class="text-slate-700 text-sm mt-0.5">Let's learn percentages together and earn awesome badges along the way! 🚀</p>
+            </div>
+        </div>
+
         <!-- Navigation Tabs -->
-        <div class="flex justify-center gap-3 mb-8">
+        <div class="flex justify-center gap-3 mb-6">
             <button onclick="switchTab('explore')" id="btn-explore" class="tab-btn active px-6 py-3 rounded-2xl font-fredoka font-semibold text-lg transition-all flex items-center gap-2 shadow-sm">
                 <i data-lucide="book-open" class="w-5 h-5"></i> Learn & Explore
             </button>
@@ -60,18 +73,43 @@
             </button>
         </div>
 
+        <!-- Badge Progress Display (Visible Across Both Tabs) -->
+        <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-md border border-indigo-100 mb-8">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center">Your Badge Progress Showcase</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div id="badge-card-1" class="badge-card badge-locked bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">🍕</div>
+                    <div class="font-fredoka font-bold text-xs text-slate-800">Pizza Master</div>
+                </div>
+                <div id="badge-card-2" class="badge-card badge-locked bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">🛍️</div>
+                    <div class="font-fredoka font-bold text-xs text-slate-800">Smart Shopper</div>
+                </div>
+                <div id="badge-card-3" class="badge-card badge-locked bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">🎮</div>
+                    <div class="font-fredoka font-bold text-xs text-slate-800">Level Legend</div>
+                </div>
+                <div id="badge-card-4" class="badge-card badge-locked bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">📚</div>
+                    <div class="font-fredoka font-bold text-xs text-slate-800">Reading Champ</div>
+                </div>
+            </div>
+        </div>
+
         <!-- TAB 1: LEARN & EXPLORE -->
         <section id="tab-explore" class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-100">
             <div class="text-center max-w-2xl mx-auto mb-8">
                 <span class="bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">Visual Math</span>
                 <h2 class="text-3xl font-fredoka font-bold text-slate-800 mt-3">What is a Percentage?</h2>
-                <p class="text-slate-600 mt-2">"Percent" literally means <strong class="text-indigo-600">per 100</strong> (out of 100 equal parts). Slide the bar below to explore how numbers change!</p>
+                <p class="text-slate-600 mt-2">"Percent" literally means <strong class="text-indigo-600">per 100</strong> (out of 100 equal parts). Slide Pip's bamboo bar below to see how parts change!</p>
             </div>
 
             <!-- Interactive Grid Visualizer -->
             <div class="bg-gradient-to-r from-indigo-50 to-teal-50 rounded-2xl p-6 border border-indigo-100 mb-8">
                 <div class="flex justify-between items-center mb-4">
-                    <span class="font-fredoka font-semibold text-indigo-900 text-lg">Interactive Grid (100 Squares)</span>
+                    <span class="font-fredoka font-semibold text-indigo-900 text-lg flex items-center gap-2">
+                        🐼 Pip's 100-Square Bamboo Grid
+                    </span>
                     <span id="slider-val-display" class="bg-indigo-600 text-white font-fredoka px-4 py-1.5 rounded-full text-lg shadow">50%</span>
                 </div>
                 
@@ -92,12 +130,12 @@
             <!-- Certificate Promo Banner on Home Page -->
             <div class="mb-8 p-6 bg-gradient-to-r from-amber-50 via-teal-50 to-indigo-50 border-2 border-dashed border-teal-300 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-4">
-                    <div class="bg-amber-400 text-white p-3 rounded-2xl shadow-md">
-                        <i data-lucide="award" class="w-8 h-8"></i>
+                    <div class="bg-amber-400 text-white p-3 rounded-2xl shadow-md text-3xl">
+                        🏆
                     </div>
                     <div>
-                        <h3 class="font-fredoka font-bold text-slate-800 text-lg">Earn Your Official Completion Certificate! 🎓</h3>
-                        <p class="text-slate-600 text-sm">Complete all 4 Challenge Quests to unlock a personalized certificate you can download!</p>
+                        <h3 class="font-fredoka font-bold text-slate-800 text-lg">Earn Your Completion Certificate! 🎓</h3>
+                        <p class="text-slate-600 text-sm">Help Pip solve all 4 Quests to unlock a personalized certificate you can print or download!</p>
                     </div>
                 </div>
                 <button onclick="switchTab('challenges')" class="bg-teal-600 hover:bg-teal-700 text-white font-fredoka font-bold px-5 py-2.5 rounded-xl shadow transition whitespace-nowrap">
@@ -112,11 +150,11 @@
                 </div>
                 <div class="p-4 rounded-2xl bg-pink-50 border border-pink-100">
                     <h3 class="font-fredoka font-bold text-pink-800 text-lg">🛍️ Sale Discounts</h3>
-                    <p class="text-slate-600 text-sm mt-1">A 50% discount means you save half the price. 100% means it's completely free!</p>
+                    <p class="text-slate-600 text-sm mt-1">A 50% discount means you save half the price. 100% means it's free!</p>
                 </div>
                 <div class="p-4 rounded-2xl bg-amber-50 border border-amber-100">
                     <h3 class="font-fredoka font-bold text-amber-800 text-lg">🔋 Battery Life</h3>
-                    <p class="text-slate-600 text-sm mt-1">100% battery means your phone is fully charged and ready to play games!</p>
+                    <p class="text-slate-600 text-sm mt-1">100% battery means your tablet is fully charged and ready!</p>
                 </div>
             </div>
         </section>
@@ -126,7 +164,7 @@
             <div class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b border-slate-100 gap-4">
                 <div>
                     <h2 class="text-2xl font-fredoka font-bold text-slate-800">Percentage Quest Arena</h2>
-                    <p class="text-slate-500 text-sm">Solve problems by explaining your step-by-step thinking approach!</p>
+                    <p class="text-slate-500 text-sm">Solve Pip's challenges by explaining your step-by-step thinking!</p>
                 </div>
                 <div class="flex items-center gap-2 bg-indigo-50 px-4 py-2 rounded-2xl border border-indigo-200">
                     <i data-lucide="trophy" class="w-5 h-5 text-amber-500"></i>
@@ -138,12 +176,10 @@
             <div id="quests-container" class="space-y-6"></div>
 
             <!-- Certificate Generator Box (Unlocked when all 4 are completed) -->
-            <div id="certificate-banner" class="hidden mt-8 p-6 bg-gradient-to-r from-amber-50 via-teal-50 to-indigo-50 border-2 border-dashed border-teal-400 rounded-3xl text-center shadow-md">
-                <div class="inline-block p-3 bg-amber-400 text-white rounded-2xl shadow-md mb-3">
-                    <i data-lucide="award" class="w-8 h-8"></i>
-                </div>
-                <h3 class="text-2xl font-fredoka font-bold text-slate-800">Incredible Job! You've Mastered All Quests! 🎉</h3>
-                <p class="text-slate-600 text-sm mt-1 max-w-md mx-auto">You've successfully solved every challenge and collected all 4 badges. Type your name below to download your official certificate!</p>
+            <div id="certificate-banner" class="hidden mt-8 p-6 bg-gradient-to-r from-amber-100 via-teal-100 to-indigo-100 border-2 border-dashed border-teal-400 rounded-3xl text-center shadow-md">
+                <div class="text-4xl mb-2">🎉 🏆 🎉</div>
+                <h3 class="text-2xl font-fredoka font-bold text-slate-800">Incredible Job! You've Mastered All Quests!</h3>
+                <p class="text-slate-700 text-sm mt-1 max-w-md mx-auto">You and Pip solved every single challenge! Enter your name below to download your official certificate!</p>
                 
                 <div class="mt-5 flex flex-col sm:flex-row justify-center items-center gap-3">
                     <input type="text" id="student-name-input" placeholder="Enter Explorer's Name" class="px-4 py-3 rounded-xl border border-slate-300 font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 w-64 text-center">
@@ -156,19 +192,15 @@
 
     </main>
 
-    <!-- Footer with Attribution -->
-    <footer class="w-full py-6 mt-12 bg-white/60 border-t border-indigo-100 text-center text-slate-500 text-sm font-medium">
-        <p>💡 <strong>Ideated by Mahua Banerjee, built with Gemini</strong> 🚀</p>
-    </footer>
-
-    <!-- Hidden Certificate Template for PDF Export -->
-    <div id="certificate-template" class="hidden">
-        <div style="padding: 50px; background: #ffffff; border: 12px solid #4F46E5; text-align: center; font-family: 'Fredoka', sans-serif; width: 800px; margin: 0 auto; box-sizing: border-box;">
-            <div style="color: #4F46E5; font-size: 36px; font-weight: bold; margin-bottom: 10px;">🏆 PercentPal Certificate of Mastery 🏆</div>
+    <!-- Certificate Render Template (Kept off-screen safely) -->
+    <div style="position: absolute; left: -9999px; top: -9999px;">
+        <div id="certificate-template" style="width: 800px; padding: 40px; background: #ffffff; border: 12px solid #4F46E5; text-align: center; font-family: 'Fredoka', sans-serif; box-sizing: border-box; border-radius: 20px;">
+            <div style="font-size: 50px; margin-bottom: 5px;">🐼 🏆 🍕</div>
+            <div style="color: #4F46E5; font-size: 36px; font-weight: bold; margin-bottom: 10px;">PercentPal Certificate of Mastery</div>
             <p style="font-size: 18px; color: #64748B; margin-top: 5px;">This is proudly presented to</p>
-            <div id="cert-name-display" style="font-size: 32px; color: #0D9488; font-weight: bold; border-bottom: 3px dashed #CBD5E1; display: inline-block; padding: 0 30px; margin: 15px 0;">Explorer</div>
-            <p style="font-size: 18px; color: #334155; margin-top: 15px;">for successfully completing all percentage challenges and mastering problem-solving approaches on</p>
-            <div style="font-size: 24px; color: #4F46E5; font-weight: bold; margin: 10px 0;">PercentPal</div>
+            <div id="cert-name-display" style="font-size: 34px; color: #0D9488; font-weight: bold; border-bottom: 3px dashed #CBD5E1; display: inline-block; padding: 0 30px; margin: 15px 0;">Super Explorer</div>
+            <p style="font-size: 18px; color: #334155; margin-top: 15px; line-height: 1.5;">for successfully completing all percentage challenges and mastering problem-solving approaches with <strong>Pip the Panda</strong> on</p>
+            <div style="font-size: 26px; color: #4F46E5; font-weight: bold; margin: 12px 0;">PercentPal</div>
             <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #E2E8F0; padding-top: 20px;">
                 <div style="font-size: 14px; color: #64748B;">Date: <span id="cert-date"></span></div>
                 <div style="font-size: 14px; color: #475569; font-weight: bold;">Ideated by Mahua Banerjee, built with Gemini 🚀</div>
@@ -176,11 +208,16 @@
         </div>
     </div>
 
+    <!-- Footer with Attribution -->
+    <footer class="w-full py-6 mt-12 bg-white/60 border-t border-indigo-100 text-center text-slate-500 text-sm font-medium">
+        <p>💡 <strong>Ideated by Mahua Banerjee, built with Gemini</strong> 🚀</p>
+    </footer>
+
     <!-- Application Logic -->
     <script>
         lucide.createIcons();
 
-        // Local Visitor Counter Initialization
+        // Local Visitor Counter
         let visits = localStorage.getItem('percentpal_visits');
         if (!visits) {
             visits = 148;
@@ -239,9 +276,9 @@
                 title: "Quest 1: The Birthday Pizza Party 🍕",
                 story: "Leo ordered a giant pizza with 50 slices for his birthday party. His friends ate 30% of the slices. How many slices did they eat?",
                 options: [
-                    { text: "A) 10 slices", correct: false, explanation: "Not quite! 10 out of 50 is only 20%." },
-                    { text: "B) 15 slices", correct: true, explanation: "Spot on! 10% of 50 is 5, so 30% is 5 × 3 = 15 slices!" },
-                    { text: "C) 20 slices", correct: false, explanation: "Too high! 20 out of 50 is 40%." }
+                    { text: "A) 10 slices", correct: false, explanation: "Pip says: Not quite! 10 out of 50 is only 20%." },
+                    { text: "B) 15 slices", correct: true, explanation: "Pip says: Spot on! 10% of 50 is 5, so 30% is 5 × 3 = 15 slices!" },
+                    { text: "C) 20 slices", correct: false, explanation: "Pip says: Too high! 20 out of 50 is 40%." }
                 ],
                 badgeName: "Pizza Master"
             },
@@ -250,9 +287,9 @@
                 title: "Quest 2: The Toy Store Sale 🧸",
                 story: "A cool robot toy costs $80. Today, there is a special 25% discount sale! How much money do you save?",
                 options: [
-                    { text: "A) $20", correct: true, explanation: "Brilliant! 25% means one-quarter (1/4). One-fourth of $80 is $20!" },
-                    { text: "B) $25", correct: false, explanation: "Check again! 25% is a fraction of the total price, not $25 flat." },
-                    { text: "C) $40", correct: false, explanation: "That would be a 50% discount!" }
+                    { text: "A) $20", correct: true, explanation: "Pip says: Brilliant! 25% means one-quarter (1/4). One-fourth of $80 is $20!" },
+                    { text: "B) $25", correct: false, explanation: "Pip says: Check again! 25% is a fraction of the total price, not $25 flat." },
+                    { text: "C) $40", correct: false, explanation: "Pip says: That would be a 50% discount!" }
                 ],
                 badgeName: "Smart Shopper"
             },
@@ -261,9 +298,9 @@
                 title: "Quest 3: The Video Game Levels 🎮",
                 story: "Maya has 40 levels in her favorite puzzle game. She has successfully completed 75% of them. How many levels has she finished?",
                 options: [
-                    { text: "A) 25 levels", correct: false, explanation: "Close, but 75% is three-quarters of the game." },
-                    { text: "B) 30 levels", correct: true, explanation: "Awesome! 75% is 3/4. Three-quarters of 40 is (40 ÷ 4) × 3 = 30 levels!" },
-                    { text: "C) 35 levels", correct: false, explanation: "Just a bit too high! Keep up the great thinking." }
+                    { text: "A) 25 levels", correct: false, explanation: "Pip says: Close, but 75% is three-quarters of the game." },
+                    { text: "B) 30 levels", correct: true, explanation: "Pip says: Awesome! 75% is 3/4. Three-quarters of 40 is (40 ÷ 4) × 3 = 30 levels!" },
+                    { text: "C) 35 levels", correct: false, explanation: "Pip says: Just a bit too high! Keep up the great thinking." }
                 ],
                 badgeName: "Level Legend"
             },
@@ -272,9 +309,9 @@
                 title: "Quest 4: The Library Reading Goal 📚",
                 story: "The school library has a goal of reading 200 books this term. The students have already read 110 books. What percentage of their goal have they reached?",
                 options: [
-                    { text: "A) 50%", correct: false, explanation: "50% of 200 would be 100 books. They've read slightly more!" },
-                    { text: "B) 55%", correct: true, explanation: "Fantastic math! 110 out of 200 is 110/200 = 55/100 = 55%!" },
-                    { text: "C) 60%", correct: false, explanation: "60% of 200 would be 120 books. So close!" }
+                    { text: "A) 50%", correct: false, explanation: "Pip says: 50% of 200 would be 100 books. They've read slightly more!" },
+                    { text: "B) 55%", correct: true, explanation: "Pip says: Fantastic math! 110 out of 200 is 110/200 = 55/100 = 55%!" },
+                    { text: "C) 60%", correct: false, explanation: "Pip says: 60% of 200 would be 120 books. So close!" }
                 ],
                 badgeName: "Reading Champ"
             }
@@ -337,7 +374,7 @@
                 }
             } else {
                 feedbackEl.className = 'mt-3 text-sm font-semibold text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-200';
-                feedbackEl.innerHTML = `💡 Not quite right. ${selectedOpt.explanation}`;
+                feedbackEl.innerHTML = `💡 ${selectedOpt.explanation}`;
             }
         }
 
@@ -345,6 +382,15 @@
             const count = unlockedBadges.length;
             document.getElementById('badges-count').innerText = count;
             document.getElementById('badges-earned').innerText = count;
+
+            // Highlight Badge Showcase cards
+            unlockedBadges.forEach(id => {
+                const card = document.getElementById(`badge-card-${id}`);
+                if (card) {
+                    card.classList.remove('badge-locked');
+                    card.classList.add('badge-unlocked');
+                }
+            });
 
             if (count === 4) {
                 document.getElementById('certificate-banner').classList.remove('hidden');
@@ -362,19 +408,16 @@
             document.getElementById('cert-date').innerText = new Date().toLocaleDateString();
 
             const element = document.getElementById('certificate-template');
-            element.classList.remove('hidden');
 
             const opt = {
                 margin:       0.2,
                 filename:     `${studentName}_PercentPal_Certificate.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
+                html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
             };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                element.classList.add('hidden');
-            });
+            html2pdf().set(opt).from(element).save();
         }
 
         renderQuests();
