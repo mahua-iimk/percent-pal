@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- PercentPal Last Updated: October 15, 2026, 10:51 AM | Pip the Panda Edition -->
+    <!-- PercentPal Last Updated: October 15, 2026, 11:00 AM | Pip the Panda Edition -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PercentPal - The Interactive Percentage Adventure with Pip!</title>
@@ -11,15 +11,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- html2pdf for Certificate Download -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .font-fredoka { font-family: 'Fredoka', sans-serif; }
         .tab-btn.active { background-color: #4F46E5; color: white; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); }
         .badge-card { transition: all 0.3s ease; }
         .badge-locked { filter: grayscale(100%); opacity: 0.4; }
-        .badge-unlocked { filter: grayscale(0%); opacity: 1; transform: scale(1.05); }
+        .badge-unlocked { filter: grayscale(0%); opacity: 1; transform: scale(1.05); animation: bounceShort 0.5s ease; }
+        @keyframes bounceShort {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen text-slate-800 flex flex-col justify-between">
@@ -59,7 +61,7 @@
             <div class="text-5xl animate-bounce">🐼</div>
             <div>
                 <h2 class="font-fredoka font-bold text-xl text-amber-900">Hi! I'm Pip the Panda Explorer!</h2>
-                <p class="text-slate-700 text-sm mt-0.5">Let's learn percentages together and earn awesome badges along the way! 🚀</p>
+                <p class="text-slate-700 text-sm mt-0.5">Let's journey through our quests one by one and collect amazing badges! 🚀</p>
             </div>
         </div>
 
@@ -69,27 +71,27 @@
                 <i data-lucide="book-open" class="w-5 h-5"></i> Learn & Explore
             </button>
             <button onclick="switchTab('challenges')" id="btn-challenges" class="tab-btn px-6 py-3 rounded-2xl font-fredoka font-semibold text-lg transition-all flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-100 shadow-sm">
-                <i data-lucide="award" class="w-5 h-5"></i> Challenge Quests (<span id="badges-count">0</span>/4)
+                <i data-lucide="award" class="w-5 h-5"></i> Quest Arena (<span id="badges-count">0</span>/4)
             </button>
         </div>
 
         <!-- Badge Progress Display -->
         <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-md border border-indigo-100 mb-8">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center">Your Badge Progress Showcase</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 text-center">Badge Journey Showcase</h3>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div id="badge-card-1" class="badge-card badge-locked bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 p-3 rounded-xl text-center">
+                <div id="badge-card-0" class="badge-card badge-locked bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 p-3 rounded-xl text-center">
                     <div class="text-2xl mb-1">🍕</div>
                     <div class="font-fredoka font-bold text-xs text-slate-800">Pizza Master</div>
                 </div>
-                <div id="badge-card-2" class="badge-card badge-locked bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 p-3 rounded-xl text-center">
+                <div id="badge-card-1" class="badge-card badge-locked bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 p-3 rounded-xl text-center">
                     <div class="text-2xl mb-1">🛍️</div>
                     <div class="font-fredoka font-bold text-xs text-slate-800">Smart Shopper</div>
                 </div>
-                <div id="badge-card-3" class="badge-card badge-locked bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 p-3 rounded-xl text-center">
+                <div id="badge-card-2" class="badge-card badge-locked bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 p-3 rounded-xl text-center">
                     <div class="text-2xl mb-1">🎮</div>
                     <div class="font-fredoka font-bold text-xs text-slate-800">Level Legend</div>
                 </div>
-                <div id="badge-card-4" class="badge-card badge-locked bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 p-3 rounded-xl text-center">
+                <div id="badge-card-3" class="badge-card badge-locked bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 p-3 rounded-xl text-center">
                     <div class="text-2xl mb-1">📚</div>
                     <div class="font-fredoka font-bold text-xs text-slate-800">Reading Champ</div>
                 </div>
@@ -127,66 +129,17 @@
                 </div>
             </div>
 
-            <!-- Certificate Promo Banner on Home Page -->
-            <div class="mb-8 p-6 bg-gradient-to-r from-amber-50 via-teal-50 to-indigo-50 border-2 border-dashed border-teal-300 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-4">
-                    <div class="bg-amber-400 text-white p-3 rounded-2xl shadow-md text-3xl">
-                        🏆
-                    </div>
-                    <div>
-                        <h3 class="font-fredoka font-bold text-slate-800 text-lg">Earn Your Completion Certificate! 🎓</h3>
-                        <p class="text-slate-600 text-sm">Help Pip solve all 4 Quests to unlock a personalized certificate you can print or download!</p>
-                    </div>
-                </div>
-                <button onclick="switchTab('challenges')" class="bg-teal-600 hover:bg-teal-700 text-white font-fredoka font-bold px-5 py-2.5 rounded-xl shadow transition whitespace-nowrap">
-                    Start Quests Now
+            <div class="text-center">
+                <button onclick="switchTab('challenges')" class="bg-gradient-to-r from-indigo-600 to-teal-500 text-white font-fredoka font-bold px-8 py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition transform hover:-translate-y-0.5 flex items-center gap-2 mx-auto">
+                    Start Challenge Quests! <i data-lucide="arrow-right" class="w-5 h-5"></i>
                 </button>
-            </div>
-
-            <div class="grid sm:grid-cols-3 gap-4 text-center">
-                <div class="p-4 rounded-2xl bg-teal-50 border border-teal-100">
-                    <h3 class="font-fredoka font-bold text-teal-800 text-lg">🍕 Pizza Rule</h3>
-                    <p class="text-slate-600 text-sm mt-1">If a pizza has 100 slices and you eat 25, you ate 25% of the pizza!</p>
-                </div>
-                <div class="p-4 rounded-2xl bg-pink-50 border border-pink-100">
-                    <h3 class="font-fredoka font-bold text-pink-800 text-lg">🛍️ Sale Discounts</h3>
-                    <p class="text-slate-600 text-sm mt-1">A 50% discount means you save half the price. 100% means it's free!</p>
-                </div>
-                <div class="p-4 rounded-2xl bg-amber-50 border border-amber-100">
-                    <h3 class="font-fredoka font-bold text-amber-800 text-lg">🔋 Battery Life</h3>
-                    <p class="text-slate-600 text-sm mt-1">100% battery means your tablet is fully charged and ready!</p>
-                </div>
             </div>
         </section>
 
-        <!-- TAB 2: CHALLENGE QUESTS -->
+        <!-- TAB 2: STEP-BY-STEP CHALLENGE QUESTS -->
         <section id="tab-challenges" class="hidden bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-100">
-            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b border-slate-100 gap-4">
-                <div>
-                    <h2 class="text-2xl font-fredoka font-bold text-slate-800">Percentage Quest Arena</h2>
-                    <p class="text-slate-500 text-sm">Solve Pip's challenges by explaining your step-by-step thinking!</p>
-                </div>
-                <div class="flex items-center gap-2 bg-indigo-50 px-4 py-2 rounded-2xl border border-indigo-200">
-                    <i data-lucide="trophy" class="w-5 h-5 text-amber-500"></i>
-                    <span class="font-fredoka font-bold text-indigo-900"><span id="badges-earned">0</span> / 4 Badges Unlocked</span>
-                </div>
-            </div>
-
-            <!-- Quest Cards Container -->
-            <div id="quests-container" class="space-y-6"></div>
-
-            <!-- Certificate Generator Box (Unlocked when all 4 are completed) -->
-            <div id="certificate-banner" class="hidden mt-8 p-6 bg-gradient-to-r from-amber-100 via-teal-100 to-indigo-100 border-2 border-dashed border-teal-400 rounded-3xl text-center shadow-md">
-                <div class="text-4xl mb-2">🎉 🏆 🎉</div>
-                <h3 class="text-2xl font-fredoka font-bold text-slate-800">Incredible Job! You've Mastered All Quests!</h3>
-                <p class="text-slate-700 text-sm mt-1 max-w-md mx-auto">You and Pip solved every single challenge! Enter your name below to download your official certificate!</p>
-                
-                <div class="mt-5 flex flex-col sm:flex-row justify-center items-center gap-3">
-                    <input type="text" id="student-name-input" placeholder="Enter Explorer's Name" class="px-4 py-3 rounded-xl border border-slate-300 font-medium focus:outline-none focus:ring-2 focus:ring-teal-500 w-64 text-center">
-                    <button onclick="generateCertificate()" class="bg-teal-600 hover:bg-teal-700 text-white font-fredoka font-bold px-6 py-3 rounded-xl shadow-lg transition flex items-center gap-2">
-                        <i data-lucide="download" class="w-5 h-5"></i> Download Certificate
-                    </button>
-                </div>
+            <div id="quest-arena">
+                <!-- Dynamically rendered active quest step -->
             </div>
         </section>
 
@@ -249,14 +202,14 @@
                 document.getElementById('btn-challenges').classList.remove('bg-white', 'text-slate-600');
                 document.getElementById('btn-explore').classList.remove('active', 'bg-indigo-600', 'text-white');
                 document.getElementById('btn-explore').classList.add('bg-white', 'text-slate-600');
+                renderCurrentQuest();
             }
             lucide.createIcons();
         }
 
-        // Quest Data
+        // Quests Data
         const quests = [
             {
-                id: 1,
                 title: "Quest 1: The Birthday Pizza Party 🍕",
                 story: "Leo ordered a giant pizza with 50 slices for his birthday party. His friends ate 30% of the slices. How many slices did they eat?",
                 options: [
@@ -264,10 +217,10 @@
                     { text: "B) 15 slices", correct: true, explanation: "Pip says: Spot on! 10% of 50 is 5, so 30% is 5 × 3 = 15 slices!" },
                     { text: "C) 20 slices", correct: false, explanation: "Pip says: Too high! 20 out of 50 is 40%." }
                 ],
-                badgeName: "Pizza Master"
+                badgeName: "Pizza Master",
+                badgeEmoji: "🍕"
             },
             {
-                id: 2,
                 title: "Quest 2: The Toy Store Sale 🧸",
                 story: "A cool robot toy costs $80. Today, there is a special 25% discount sale! How much money do you save?",
                 options: [
@@ -275,10 +228,10 @@
                     { text: "B) $25", correct: false, explanation: "Pip says: Check again! 25% is a fraction of the total price, not $25 flat." },
                     { text: "C) $40", correct: false, explanation: "Pip says: That would be a 50% discount!" }
                 ],
-                badgeName: "Smart Shopper"
+                badgeName: "Smart Shopper",
+                badgeEmoji: "🛍️"
             },
             {
-                id: 3,
                 title: "Quest 3: The Video Game Levels 🎮",
                 story: "Maya has 40 levels in her favorite puzzle game. She has successfully completed 75% of them. How many levels has she finished?",
                 options: [
@@ -286,10 +239,10 @@
                     { text: "B) 30 levels", correct: true, explanation: "Pip says: Awesome! 75% is 3/4. Three-quarters of 40 is (40 ÷ 4) × 3 = 30 levels!" },
                     { text: "C) 35 levels", correct: false, explanation: "Pip says: Just a bit too high! Keep up the great thinking." }
                 ],
-                badgeName: "Level Legend"
+                badgeName: "Level Legend",
+                badgeEmoji: "🎮"
             },
             {
-                id: 4,
                 title: "Quest 4: The Library Reading Goal 📚",
                 story: "The school library has a goal of reading 200 books this term. The students have already read 110 books. What percentage of their goal have they reached?",
                 options: [
@@ -297,140 +250,120 @@
                     { text: "B) 55%", correct: true, explanation: "Pip says: Fantastic math! 110 out of 200 is 110/200 = 55/100 = 55%!" },
                     { text: "C) 60%", correct: false, explanation: "Pip says: 60% of 200 would be 120 books. So close!" }
                 ],
-                badgeName: "Reading Champ"
+                badgeName: "Reading Champ",
+                badgeEmoji: "📚"
             }
         ];
 
-        let unlockedBadges = JSON.parse(localStorage.getItem('percentpal_badges')) || [];
+        let currentQuestIndex = parseInt(localStorage.getItem('percentpal_step')) || 0;
 
-        function renderQuests() {
-            const container = document.getElementById('quests-container');
-            container.innerHTML = '';
-
-            quests.forEach((q) => {
-                const isCompleted = unlockedBadges.includes(q.id);
-                const card = document.createElement('div');
-                card.className = `p-6 rounded-2xl border transition-all ${isCompleted ? 'bg-emerald-50/50 border-emerald-200' : 'bg-slate-50 border-slate-200'}`;
-                
-                let optionsHtml = '';
-                q.options.forEach((opt, oIdx) => {
-                    optionsHtml += `
-                        <button onclick="checkAnswer(${q.id}, ${oIdx})" id="q${q.id}-opt${oIdx}" 
-                            class="w-full text-left p-3.5 rounded-xl border border-slate-200 bg-white font-medium hover:border-indigo-400 hover:bg-indigo-50/30 transition flex justify-between items-center">
-                            <span>${opt.text}</span>
+        function renderCurrentQuest() {
+            const arena = document.getElementById('quest-arena');
+            
+            // Check if all quests are finished
+            if (currentQuestIndex >= quests.length) {
+                arena.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="text-6xl mb-3 animate-bounce">🐼 🏆</div>
+                        <h2 class="text-3xl font-fredoka font-bold text-amber-900 mb-2">Incredible Job! All Quests Completed!</h2>
+                        <p class="text-slate-600 max-w-md mx-auto mb-6">Pip is so proud of your percentage mastery! You collected every single badge along the way.</p>
+                        <button onclick="resetAdventure()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-fredoka font-bold px-6 py-3 rounded-2xl shadow transition">
+                            🔄 Play Adventure Again
                         </button>
-                    `;
-                });
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="font-fredoka font-bold text-lg text-slate-800">${q.title}</h3>
-                        <span class="text-xs font-bold px-3 py-1 rounded-full ${isCompleted ? 'bg-emerald-200 text-emerald-800' : 'bg-indigo-100 text-indigo-700'}">
-                            ${isCompleted ? '✅ Completed' : '🏆 Badge: ' + q.badgeName}
-                        </span>
                     </div>
-                    <p class="text-slate-600 text-sm mb-4">${q.story}</p>
-                    <div class="space-y-2" id="q${q.id}-options">
-                        ${optionsHtml}
-                    </div>
-                    <div id="q${q.id}-feedback" class="mt-3 text-sm font-medium hidden"></div>
                 `;
-                container.appendChild(card);
+                updateBadgeDisplay();
+                return;
+            }
+
+            const q = quests[currentQuestIndex];
+            let optionsHtml = '';
+            q.options.forEach((opt, oIdx) => {
+                optionsHtml += `
+                    <button onclick="selectOption(${oIdx})" id="opt-${oIdx}" 
+                        class="w-full text-left p-4 rounded-xl border border-slate-200 bg-slate-50 font-medium hover:border-indigo-400 hover:bg-indigo-50/30 transition flex justify-between items-center">
+                        <span>${opt.text}</span>
+                    </button>
+                `;
             });
 
-            updateBadgeStats();
+            arena.innerHTML = `
+                <div class="flex justify-between items-center mb-6 pb-3 border-b border-slate-100">
+                    <span class="bg-indigo-100 text-indigo-700 font-fredoka text-sm px-3 py-1 rounded-full">Level ${currentQuestIndex + 1} of 4</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Target Badge: ${q.badgeEmoji} ${q.badgeName}</span>
+                </div>
+                
+                <h3 class="text-2xl font-fredoka font-bold text-slate-800 mb-2">${q.title}</h3>
+                <p class="text-slate-600 text-base mb-6">${q.story}</p>
+                
+                <div class="space-y-3 mb-6" id="options-list">
+                    ${optionsHtml}
+                </div>
+
+                <div id="feedback-box" class="hidden p-4 rounded-2xl mb-6 text-sm font-semibold"></div>
+
+                <div id="next-container" class="hidden text-right">
+                    <button onclick="nextQuest()" class="bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-fredoka font-bold px-8 py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition flex items-center gap-2 ml-auto">
+                        Congratulations! Earn Badge & Go Next <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            `;
+            updateBadgeDisplay();
+            lucide.createIcons();
         }
 
-        function checkAnswer(questId, optIdx) {
-            const quest = quests.find(q => q.id === questId);
-            const selectedOpt = quest.options[optIdx];
-            const feedbackEl = document.getElementById(`q${questId}-feedback`);
-            
+        function selectOption(optIdx) {
+            const q = quests[currentQuestIndex];
+            const selectedOpt = q.options[optIdx];
+            const feedbackEl = document.getElementById('feedback-box');
+            const nextContainer = document.getElementById('next-container');
+
             feedbackEl.classList.remove('hidden');
+
             if (selectedOpt.correct) {
-                feedbackEl.className = 'mt-3 text-sm font-semibold text-emerald-600 bg-emerald-50 p-3 rounded-xl border border-emerald-200';
+                feedbackEl.className = 'p-4 rounded-2xl mb-6 text-sm font-semibold bg-emerald-50 border border-emerald-200 text-emerald-800';
                 feedbackEl.innerHTML = `🎉 Correct! ${selectedOpt.explanation}`;
                 
-                if (!unlockedBadges.includes(questId)) {
-                    unlockedBadges.push(questId);
-                    localStorage.setItem('percentpal_badges', JSON.stringify(unlockedBadges));
-                    renderQuests();
-                }
+                // Disable option buttons after correct answer
+                const buttons = document.querySelectorAll('#options-list button');
+                buttons.forEach(b => b.disabled = true);
+
+                nextContainer.classList.remove('hidden');
             } else {
-                feedbackEl.className = 'mt-3 text-sm font-semibold text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-200';
+                feedbackEl.className = 'p-4 rounded-2xl mb-6 text-sm font-semibold bg-rose-50 border border-rose-200 text-rose-700';
                 feedbackEl.innerHTML = `💡 ${selectedOpt.explanation}`;
             }
         }
 
-        function updateBadgeStats() {
-            const count = unlockedBadges.length;
-            document.getElementById('badges-count').innerText = count;
-            document.getElementById('badges-earned').innerText = count;
+        function nextQuest() {
+            currentQuestIndex++;
+            localStorage.setItem('percentpal_step', currentQuestIndex);
+            renderCurrentQuest();
+        }
 
-            unlockedBadges.forEach(id => {
-                const card = document.getElementById(`badge-card-${id}`);
+        function updateBadgeDisplay() {
+            document.getElementById('badges-count').innerText = currentQuestIndex;
+            for (let i = 0; i < 4; i++) {
+                const card = document.getElementById(`badge-card-${i}`);
                 if (card) {
-                    card.classList.remove('badge-locked');
-                    card.classList.add('badge-unlocked');
+                    if (i < currentQuestIndex) {
+                        card.classList.remove('badge-locked');
+                        card.classList.add('badge-unlocked');
+                    } else {
+                        card.classList.add('badge-locked');
+                        card.classList.remove('badge-unlocked');
+                    }
                 }
-            });
-
-            if (count === 4) {
-                document.getElementById('certificate-banner').classList.remove('hidden');
-            } else {
-                document.getElementById('certificate-banner').classList.add('hidden');
             }
-            lucide.createIcons();
         }
 
-        function generateCertificate() {
-            const nameInput = document.getElementById('student-name-input').value.trim();
-            const studentName = nameInput ? nameInput : "Super Explorer";
-            const currentDate = new Date().toLocaleDateString();
-
-            // Create certificate element dynamically in memory to guarantee html2canvas captures it correctly
-            const certElement = document.createElement('div');
-            certElement.style.width = '800px';
-            certElement.style.padding = '40px';
-            certElement.style.background = '#ffffff';
-            certElement.style.border = '12px solid #4F46E5';
-            certElement.style.textAlign = 'center';
-            certElement.style.fontFamily = "'Fredoka', sans-serif";
-            certElement.style.boxSizing = 'border-box';
-            certElement.style.borderRadius = '20px';
-            certElement.style.position = 'fixed';
-            certElement.style.top = '0';
-            certElement.style.left = '-9999px';
-
-            certElement.innerHTML = `
-                <div style="font-size: 50px; margin-bottom: 5px;">🐼 🏆 🍕</div>
-                <div style="color: #4F46E5; font-size: 36px; font-weight: bold; margin-bottom: 10px;">PercentPal Certificate of Mastery</div>
-                <p style="font-size: 18px; color: #64748B; margin-top: 5px;">This is proudly presented to</p>
-                <div style="font-size: 34px; color: #0D9488; font-weight: bold; border-bottom: 3px dashed #CBD5E1; display: inline-block; padding: 0 30px; margin: 15px 0;">${studentName}</div>
-                <p style="font-size: 18px; color: #334155; margin-top: 15px; line-height: 1.5;">for successfully completing all percentage challenges and mastering problem-solving approaches with <strong>Pip the Panda</strong> on</p>
-                <div style="font-size: 26px; color: #4F46E5; font-weight: bold; margin: 12px 0;">PercentPal</div>
-                <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #E2E8F0; padding-top: 20px;">
-                    <div style="font-size: 14px; color: #64748B;">Date: ${currentDate}</div>
-                    <div style="font-size: 14px; color: #475569; font-weight: bold;">Ideated by Mahua Banerjee, built with Gemini 🚀</div>
-                </div>
-            `;
-
-            document.body.appendChild(certElement);
-
-            const opt = {
-                margin:       0.2,
-                filename:     `${studentName}_PercentPal_Certificate.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
-            };
-
-            html2pdf().set(opt).from(certElement).save().then(() => {
-                document.body.removeChild(certElement);
-            });
+        function resetAdventure() {
+            currentQuestIndex = 0;
+            localStorage.setItem('percentpal_step', 0);
+            renderCurrentQuest();
         }
 
-        renderQuests();
+        renderCurrentQuest();
     </script>
 </body>
 </html>
